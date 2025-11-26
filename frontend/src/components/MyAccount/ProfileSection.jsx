@@ -8,7 +8,7 @@ const ProfileSection = ({ initialProfile, onProfileUpdate }) => {
     const [profile, setProfile] = useState(initialProfile);
     const [originalProfile, setOriginalProfile] = useState(initialProfile);
     const [isLoading, setIsLoading] = useState(false);
-    
+
     // ✅ Khai báo các state và ref còn thiếu
     const [avatarFile, setAvatarFile] = useState(null);
     const [avatarPreview, setAvatarPreview] = useState(initialProfile?.avatar);
@@ -22,7 +22,7 @@ const ProfileSection = ({ initialProfile, onProfileUpdate }) => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (['address', 'city', 'country', 'id_number'].includes(name)) {
-            setProfile(prev => ({ ...prev, customer: { ...prev.customer, [name]: value }}));
+            setProfile(prev => ({ ...prev, customer: { ...prev.customer, [name]: value } }));
         } else {
             setProfile(prev => ({ ...prev, [name]: value }));
         }
@@ -43,7 +43,7 @@ const ProfileSection = ({ initialProfile, onProfileUpdate }) => {
             setAvatarPreview(URL.createObjectURL(file));
         }
     };
-    
+
     const handleSave = async () => {
         setIsLoading(true);
         let profileToSave = { ...profile };
@@ -63,14 +63,14 @@ const ProfileSection = ({ initialProfile, onProfileUpdate }) => {
             // Bước 2: Gửi toàn bộ dữ liệu profile đã cập nhật (bao gồm cả avatar mới nếu có) lên server
             const updateRes = await api.put('/users/me/profile', profileToSave);
             const finalUpdatedProfile = updateRes.data.user; // Giả sử API trả về user đã cập nhật
-            
+
             // Bước 3: Cập nhật state ở local và component cha
             setProfile(finalUpdatedProfile);
             setOriginalProfile(finalUpdatedProfile);
             if (onProfileUpdate) {
                 onProfileUpdate(finalUpdatedProfile); // Gửi dữ liệu mới nhất lên cha
             }
-            
+
             setIsEditing(false);
             toast.success('Cập nhật hồ sơ thành công!'); // Thêm thông báo thành công
 
@@ -85,21 +85,21 @@ const ProfileSection = ({ initialProfile, onProfileUpdate }) => {
     if (!profile) return null;
 
     return (
-        <section className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+        <section className="border border-indigo-200 rounded-lg p-3 bg-gradient-to-r from-blue-50 to-indigo-50">
             <div className="flex items-center text-2xl font-semibold text-gray-900 mb-6">
-                <FaUserCircle className="mr-3 text-blue-500" /> Hồ sơ cá nhân
+                <FaUserCircle className="mr-3 text-indigo-600" /> Hồ sơ cá nhân
                 <div className="ml-auto flex items-center gap-3">
                     {isEditing ? (
                         <>
-                            <button onClick={handleCancel} className="flex items-center text-sm font-medium px-3 py-1.5 rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 transition-colors">
+                            <button onClick={handleCancel} className="flex items-center text-sm font-medium px-3 py-1.5 rounded-md text-red-700 bg-red-100 hover:bg-red-200 transition-colors">
                                 <FaTimes className="mr-1.5" /> Hủy
                             </button>
-                            <button onClick={handleSave} disabled={isLoading} className="flex items-center text-sm font-medium px-3 py-1.5 rounded-md text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 transition-colors">
+                            <button onClick={handleSave} disabled={isLoading} className="flex items-center text-sm font-medium px-3 py-1.5 rounded-md text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 transition-colors">
                                 <FaSave className="mr-1.5" /> {isLoading ? 'Đang lưu...' : 'Lưu'}
                             </button>
                         </>
                     ) : (
-                        <button onClick={handleEdit} className="flex items-center text-sm font-medium px-3 py-1.5 rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors">
+                        <button onClick={handleEdit} className="flex items-center text-sm font-medium px-3 py-1.5 rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 transition-colors">
                             <FaEdit className="mr-1.5" /> Chỉnh sửa
                         </button>
                     )}
@@ -108,29 +108,29 @@ const ProfileSection = ({ initialProfile, onProfileUpdate }) => {
 
             <div className="flex flex-col items-center mb-8">
                 <div className="relative">
-                    <img 
+                    <img
                         src={avatarPreview ? `http://localhost:5000${avatarPreview}` : 'https://via.placeholder.com/128'}
                         alt="Avatar"
-                        className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+                        className="w-32 h-32 rounded-full object-cover border-4 border-indigo-300"
                     />
                     {isEditing && (
-                        <button 
+                        <button
                             onClick={() => fileInputRef.current.click()}
-                            className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors"
+                            className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors"
                         >
                             <FaCamera />
                         </button>
                     )}
                 </div>
-                <input 
-                    type="file" 
-                    ref={fileInputRef} 
+                <input
+                    type="file"
+                    ref={fileInputRef}
                     onChange={handleFileChange}
                     className="hidden"
                     accept="image/png, image/jpeg"
                 />
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 {isEditing ? (
                     <>
@@ -155,14 +155,14 @@ const ProfileSection = ({ initialProfile, onProfileUpdate }) => {
 
 const InfoField = ({ label, name, value, isEditing, onChange, disabled = false }) => (
     <div>
-        <label className="text-sm font-semibold text-gray-500">{label}</label>
+        <label className="text-sm font-semibold text-slate-600">{label}</label>
         {isEditing ? (
-            <input 
+            <input
                 type="text"
                 name={name}
                 value={value || ''}
                 onChange={onChange}
-                className={`mt-1 block w-full text-base rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                className={`mt-1 block w-full text-base rounded-md border border-indigo-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 disabled={disabled}
             />
         ) : (
